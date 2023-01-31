@@ -20,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.aghogho.mvvmfirebaseauthcompose.R
@@ -29,7 +28,6 @@ import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_HOME
 import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_LOGIN
 import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_SIGNUP
 import com.aghogho.mvvmfirebaseauthcompose.ui.theme.AppTheme
-import com.aghogho.mvvmfirebaseauthcompose.ui.theme.MVVMFirebaseAuthComposeTheme
 import com.aghogho.mvvmfirebaseauthcompose.ui.theme.spacing
 import com.aghogho.mvvmfirebaseauthcompose.ui.viewmodel.AuthViewModel
 

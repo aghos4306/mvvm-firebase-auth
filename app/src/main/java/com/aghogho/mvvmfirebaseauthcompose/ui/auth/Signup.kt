@@ -1,6 +1,7 @@
 package com.aghogho.mvvmfirebaseauthcompose.ui.auth
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -18,25 +20,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.aghogho.mvvmfirebaseauthcompose.R
+import com.aghogho.mvvmfirebaseauthcompose.data.Resource
+import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_HOME
 import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_LOGIN
 import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_SIGNUP
 import com.aghogho.mvvmfirebaseauthcompose.ui.theme.MVVMFirebaseAuthComposeTheme
 import com.aghogho.mvvmfirebaseauthcompose.ui.theme.spacing
+import com.aghogho.mvvmfirebaseauthcompose.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignupScreen(navController: NavHostController) {
+fun SignupScreen(viewModel: AuthViewModel?, navController: NavHostController) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val authResource = viewModel?.signupFlow?.collectAsState()
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
-        val (refHeader, refName, refEmail, refPassword, refButtonSignup, refTextSignup) = createRefs()
+        val (refHeader, refName, refEmail, refPassword, refButtonSignup, refTextSignup, refLoading) = createRefs()
         val spacing = MaterialTheme.spacing
 
         Box(
@@ -121,7 +129,7 @@ fun SignupScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-
+                viewModel?.signUpUser(name, email, password)
             },
             modifier = Modifier.constrainAs(refButtonSignup) {
                 top.linkTo(refPassword.bottom, spacing.large)
@@ -151,6 +159,29 @@ fun SignupScreen(navController: NavHostController) {
             color = MaterialTheme.colorScheme.onSurface
         )
 
+        authResource?.value?.let {
+            when(it) {
+                is Resource.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.constrainAs(refLoading) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    })
+                }
+                is Resource.Success -> {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(ROUTE_HOME) {
+                            popUpTo(ROUTE_SIGNUP) { inclusive = true }
+                        }
+                    }
+                }
+                is Resource.Failure -> {
+                    Toast.makeText(LocalContext.current, it.exception.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
     }
 
 }
@@ -159,6 +190,6 @@ fun SignupScreen(navController: NavHostController) {
 @Composable
 fun SignupScreenPreviewLight() {
     MVVMFirebaseAuthComposeTheme() {
-        SignupScreen(rememberNavController())
+        SignupScreen(null, rememberNavController())
     }
 }
