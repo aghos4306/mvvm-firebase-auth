@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "3037777349",
+    "project_id": "mvvm-authentication-compose",
+    "storage_bucket": "mvvm-authentication-compose.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3037777349:android:c3ac99b2a1ee03ad708fac",
+        "android_client_info": {
+          "package_name": "com.aghogho.mvvmfirebaseauthcompose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3037777349-mn6kia697co3ho1tsmi1968j3rrvkcun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB11ygzv4JGTqY7TamNtcbe_rE1umqEX2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "3037777349-mn6kia697co3ho1tsmi1968j3rrvkcun.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
