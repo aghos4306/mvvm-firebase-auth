@@ -1,10 +1,14 @@
 package com.aghogho.mvvmfirebaseauthcompose.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.res.colorResource
+import androidx.lifecycle.ktx.R
 
 private val DarkColorPalette = darkColorScheme(
     primary = Purple200,
@@ -44,4 +48,26 @@ fun MVVMFirebaseAuthComposeTheme(
         shapes = Shapes,
         content = content
     )
+}
+
+
+
+@Composable
+fun AppTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
+) {
+    val colors = if (!useDarkTheme) {
+
+    } else {
+
+    }
+
+    CompositionLocalProvider(LocalSpacing provides Spacing()) {
+        MaterialTheme(
+            colorScheme = colorResource(id = com.aghogho.mvvmfirebaseauthcompose.R.color.white) as ColorScheme,
+            content = content,
+            typography = Typography
+        )
+    }
 }
