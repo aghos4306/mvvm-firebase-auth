@@ -9,9 +9,11 @@ import androidx.navigation.compose.rememberNavController
 import com.aghogho.mvvmfirebaseauthcompose.ui.auth.LoginScreen
 import com.aghogho.mvvmfirebaseauthcompose.ui.auth.SignupScreen
 import com.aghogho.mvvmfirebaseauthcompose.ui.home.HomeScreen
+import com.aghogho.mvvmfirebaseauthcompose.ui.viewmodel.AuthViewModel
 
 @Composable
 fun AppNavHost(
+    viewModel: AuthViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUTE_LOGIN
@@ -22,7 +24,7 @@ fun AppNavHost(
         startDestination = startDestination
     ) {
         composable(ROUTE_LOGIN) {
-            LoginScreen(navController)
+            LoginScreen(viewModel, navController)
         }
         composable(ROUTE_SIGNUP) {
             SignupScreen(navController)

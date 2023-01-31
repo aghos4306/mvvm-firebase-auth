@@ -23,15 +23,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val snackbarHostState = remember { SnackbarHostState() }
-            Scaffold(
-                snackbarHost = { SnackbarHost(snackbarHostState) },
-                content = {
-                    AppTheme {
-                        AppNavHost()
-                    }
-                }
-            )
+            AppTheme {
+                AppNavHost(authViewModel)
+            }
         }
     }
 

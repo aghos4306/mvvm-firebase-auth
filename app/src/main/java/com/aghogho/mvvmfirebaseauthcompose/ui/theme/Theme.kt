@@ -65,7 +65,7 @@ fun AppTheme(
 
     CompositionLocalProvider(LocalSpacing provides Spacing()) {
         MaterialTheme(
-            colorScheme = colorResource(id = com.aghogho.mvvmfirebaseauthcompose.R.color.white) as ColorScheme,
+            //colorScheme = colorResource(id = com.aghogho.mvvmfirebaseauthcompose.R.color.white) as ColorScheme,
             content = content,
             typography = Typography
         )

@@ -1,6 +1,7 @@
 package com.aghogho.mvvmfirebaseauthcompose.ui.auth
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,32 +10,41 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.aghogho.mvvmfirebaseauthcompose.R
+import com.aghogho.mvvmfirebaseauthcompose.data.Resource
+import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_HOME
 import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_LOGIN
 import com.aghogho.mvvmfirebaseauthcompose.navigation.ROUTE_SIGNUP
+import com.aghogho.mvvmfirebaseauthcompose.ui.theme.AppTheme
 import com.aghogho.mvvmfirebaseauthcompose.ui.theme.MVVMFirebaseAuthComposeTheme
 import com.aghogho.mvvmfirebaseauthcompose.ui.theme.spacing
+import com.aghogho.mvvmfirebaseauthcompose.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(viewModel: AuthViewModel?, navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val loginFlow = viewModel?.loginFlow?.collectAsState()
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
-        val (refHeader, refEmail, refPassword, refButtonLogin, refTextSignup) = createRefs()
+        val (refHeader, refEmail, refPassword, refButtonLogin, refTextSignup, refLoading) = createRefs()
         val spacing = MaterialTheme.spacing
 
         Box(
@@ -87,6 +97,7 @@ fun LoginScreen(navController: NavHostController) {
                 end.linkTo(parent.end, spacing.large)
                 width = Dimension.fillToConstraints
             },
+            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.None,
                 autoCorrect = false,
@@ -97,7 +108,7 @@ fun LoginScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-
+                viewModel?.loginUser(email, password)
             },
             modifier = Modifier.constrainAs(refButtonLogin) {
                 top.linkTo(refPassword.bottom, spacing.large)
@@ -127,6 +138,29 @@ fun LoginScreen(navController: NavHostController) {
             color = MaterialTheme.colorScheme.onSurface
         )
 
+        loginFlow?.value?.let {
+            when(it) {
+                is Resource.Failure -> {
+                    Toast.makeText(LocalContext.current, it.exception.message, Toast.LENGTH_LONG).show()
+                }
+                is Resource.Success -> {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(ROUTE_HOME) {
+                            popUpTo(ROUTE_LOGIN) { inclusive = true }
+                        }
+                    }
+                }
+                is Resource.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.constrainAs(refLoading) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    })
+                }
+            }
+        }
+
     }
 
 }
@@ -135,7 +169,7 @@ fun LoginScreen(navController: NavHostController) {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun LoginScreenPreviewLight() {
-    MVVMFirebaseAuthComposeTheme {
-        LoginScreen(rememberNavController())
+    AppTheme {
+        LoginScreen(null, rememberNavController())
     }
 }
