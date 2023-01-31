@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">MVVM FirebaseAuth Compose</string>
-    <string name="name">name</string>
+    <string name="name">Name</string>
     <string name="welcome_back">Welcome Back</string>
     <string name="email">Email</string>
     <string name="logout">Logout</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="dont_have_account">Dont have an account?</string>
     <string name="empty"/>
 </resources>
